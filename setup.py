@@ -46,13 +46,16 @@ setuptools.setup(
         'future',
         'gin-config>=0.3.0',
         'google-cloud-storage',
+        'grpcio>=1.71.2',
         'hmmlearn>=0.3.0',
         'librosa>=0.10.0',
         'pydub<=0.25.1',
+        'packaging>=24.2.0',
         'protobuf',  # removed version restriction for TF compatible version
         'mir_eval>=0.7',
         'note_seq>=0.0.5',
         'numpy>=1.23.5',
+        'requests==2.32.3',
         'scipy>=1.10.0',
         'six',
         'tensorflow==2.18.0',
@@ -70,8 +73,6 @@ setuptools.setup(
         ],
         'data_preparation': [
             'apache_beam',
-            # TODO(jesseengel): Remove versioning when beam import is fixed.
-            'pyparsing<=2.4.7'
         ],
         'test': ['pytest', 'pylint!=2.5.0'],
     },
