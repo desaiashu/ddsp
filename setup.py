@@ -1,4 +1,4 @@
-# Copyright 2025 The DDSP Authors.
+# Copyright 2024 The DDSP Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,31 +36,34 @@ setuptools.setup(
         '': ['*.gin'],
     },
     scripts=[],
+    python_requires='>=3.8, <3.12',
     install_requires=[
         'absl-py',
-        'apache-beam',
+        'apache-beam>=2.50.0',
         'cloudml-hypertune<=0.1.0.dev6',
-        'crepe<=0.0.12',
-        'dill<=0.3.4',
+        'crepe<=0.0.16',
+        'dill<=0.3.7',
         'future',
         'gin-config>=0.3.0',
         'google-cloud-storage',
-        'hmmlearn<=0.2.7',
-        'librosa<=0.10',
+        'hmmlearn>=0.3.0',
+        'librosa>=0.10.0',
         'pydub<=0.25.1',
-        'protobuf<=3.20',  # temporary fix for proto dependency bug
-        'mir_eval<=0.7',
-        'note_seq<0.0.4',
-        'numpy<1.24',
-        'scipy<=1.10.1',
+        'protobuf',  # removed version restriction for TF compatible version
+        'mir_eval>=0.7',
+        'note_seq>=0.0.5',
+        'numpy>=1.23.5',
+        'scipy>=1.10.0',
         'six',
-        'tensorflow<=2.11',
-        'tensorflowjs<3.19',
-        'tensorflow-probability<=0.19',
-        'tensorflow-datasets<=4.9',
-        'tflite_support<=0.1'
+        'tensorflow==2.18.0',
+        'tensorflowjs>=3.19',
+        'tensorflow-probability>=0.23.0',
+        'tensorflow-datasets>=4.9.2'
     ],
     extras_require={
+        'export': [
+            'tflite_support>=0.1',
+        ],
         'gcp': [
             'gevent', 'google-api-python-client', 'google-compute-engine',
             'oauth2client'
