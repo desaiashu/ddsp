@@ -32,6 +32,7 @@ setuptools.setup(
     url='http://github.com/magenta/ddsp',
     license='Apache 2.0',
     packages=setuptools.find_packages(),
+    include_package_data=True,
     package_data={
         '': ['*.gin'],
     },
