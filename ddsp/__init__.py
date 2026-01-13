@@ -14,6 +14,11 @@
 
 """Base module for the differentiable digital signal processing library."""
 
+# Use legacy Keras 2 with TensorFlow 2.16+
+# Must be set before importing TensorFlow
+import os
+os.environ['TF_USE_LEGACY_KERAS'] = '1'
+
 # Module imports.
 from ddsp import core
 from ddsp import dags
