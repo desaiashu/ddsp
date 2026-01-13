@@ -52,7 +52,7 @@ setuptools.setup(
         'packaging>=24.2.0',
         'protobuf==3.20.3',
         'mir_eval>=0.7',
-        'note_seq>=0.0.5',
+        'note_seq',
         'numpy>=1.26.0, <2.1.0',
         'requests>=2.21.0',
         'scipy>=1.10.0',
