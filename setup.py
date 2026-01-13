@@ -40,7 +40,7 @@ setuptools.setup(
     python_requires='>=3.8, <3.12',
     install_requires=[
         'absl-py',
-        'apache-beam>=2.56.0',
+        'apache-beam[tfrecord]>=2.56.0',
         'cloudml-hypertune<=0.1.0.dev6',
         'crepe<=0.0.16',
         'future',
