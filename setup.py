@@ -64,8 +64,10 @@ setuptools.setup(
     ],
     extras_require={
         'export': [
-            'tensorflowjs>=3.19',
             'tflite_support>=0.1',
+        ],
+        'tfjs': [
+            'tensorflowjs>=3.19',
         ],
         'gcp': [
             'gevent', 'google-api-python-client', 'google-compute-engine',

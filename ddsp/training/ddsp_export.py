@@ -53,7 +53,7 @@ except ImportError:
 
 # pylint: disable=pointless-string-statement
 
-from tflite_support import metadata as _metadata
+  from tflite_support import metadata as _metadata
 # pylint: enable=pointless-string-statement
 
 flags.DEFINE_string(
@@ -271,9 +271,13 @@ def saved_model_to_tflite(input_dir,
     f.write(tflite_model)
 
   if metadata_file is not None:
-    populator = _metadata.MetadataPopulator.with_model_file(save_path)
-    populator.load_associated_files([metadata_file])
-    populator.populate()
+    if _metadata is None:
+      print('Warning: tflite_support not installed, skipping metadata. '
+            'Install with: pip install ddsp[export]')
+    else:
+      populator = _metadata.MetadataPopulator.with_model_file(save_path)
+      populator.load_associated_files([metadata_file])
+      populator.populate()
   print('TFLite Conversion Success!')
 
 
