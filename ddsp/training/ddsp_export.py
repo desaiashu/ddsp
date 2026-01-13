@@ -53,7 +53,7 @@ except ImportError:
 
 # pylint: disable=pointless-string-statement
 
-  from tflite_support import metadata as _metadata
+from tflite_support import metadata as _metadata
 # pylint: enable=pointless-string-statement
 
 flags.DEFINE_string(
