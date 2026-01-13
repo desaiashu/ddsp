@@ -46,7 +46,10 @@ import gin
 import librosa
 import note_seq
 import tensorflow as tf
-from tensorflowjs.converters import converter
+try:
+  from tensorflowjs.converters import converter
+except ImportError:
+  converter = None
 
 # pylint: disable=pointless-string-statement
 
@@ -235,6 +238,10 @@ def ckpt_to_saved_model(ckpt, save_dir):
 
 def saved_model_to_tfjs(input_dir, save_dir):
   """Convert SavedModel to TFJS model."""
+  if converter is None:
+    raise ImportError(
+        'tensorflowjs is not installed. Please install it with '
+        '`pip install ddsp[export]` to use TFJS conversion.')
   print(f'\nConverting to TFJS:\nInput:{input_dir}\nOutput:{save_dir}\n')
   converter.convert([
       '--input_format=tf_saved_model', '--signature_name=serving_default',
