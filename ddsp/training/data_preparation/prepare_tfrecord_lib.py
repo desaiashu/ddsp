@@ -224,11 +224,16 @@ def prepare_tfrecord(input_audio_paths,
             num_shards=num_shards,
             coder=beam.coders.ProtoCoder(tf.train.Example)))
 
-  # Start the pipeline. Force DirectRunner to avoid gRPC issues.
-  from apache_beam.runners.direct import direct_runner
-  pipeline_options = beam.options.pipeline_options.PipelineOptions(
-      pipeline_options)
-  with beam.Pipeline(runner=direct_runner.DirectRunner(), options=pipeline_options) as pipeline:
+  # Start the pipeline. Use DirectRunner with in_memory mode to avoid gRPC issues.
+  pipeline_options = list(pipeline_options)
+  # Append flags if not already present
+  if not any('runner' in opt for opt in pipeline_options):
+    pipeline_options.append('--runner=DirectRunner')
+  if not any('direct_running_mode' in opt for opt in pipeline_options):
+    pipeline_options.append('--direct_running_mode=in_memory')
+    
+  pipeline_options = beam.options.pipeline_options.PipelineOptions(pipeline_options)
+  with beam.Pipeline(options=pipeline_options) as pipeline:
     examples = (
         pipeline
         | beam.Create(input_audio_paths)
