@@ -36,7 +36,7 @@ setuptools.setup(
         '': ['*.gin'],
     },
     scripts=[],
-    python_requires='>=3.8, <3.11',
+    python_requires='>=3.8, <3.12',
     install_requires=[
         'absl-py',
         'apache-beam>=2.56.0',
