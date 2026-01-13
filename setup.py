@@ -42,7 +42,6 @@ setuptools.setup(
         'apache-beam>=2.56.0',
         'cloudml-hypertune<=0.1.0.dev6',
         'crepe<=0.0.16',
-        'dill>=0.3.7',
         'future',
         'gin-config>=0.3.0',
         'google-cloud-storage',
