@@ -50,7 +50,7 @@ setuptools.setup(
         'librosa>=0.10.0',
         'pydub<=0.25.1',
         'packaging>=24.2.0',
-        'protobuf',  # Let TF and Beam negotiate version
+        'protobuf==3.20.3',
         'mir_eval>=0.7',
         'note_seq>=0.0.5',
         'numpy>=1.26.0, <2.1.0',
