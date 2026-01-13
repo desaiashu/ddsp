@@ -224,16 +224,12 @@ def prepare_tfrecord(input_audio_paths,
             num_shards=num_shards,
             coder=beam.coders.ProtoCoder(tf.train.Example)))
 
-  # Start the pipeline. Use DirectRunner with in_memory mode to avoid gRPC issues.
-  pipeline_options = list(pipeline_options)
-  # Append flags if not already present
-  if not any('runner' in opt for opt in pipeline_options):
-    pipeline_options.append('--runner=DirectRunner')
-  if not any('direct_running_mode' in opt for opt in pipeline_options):
-    pipeline_options.append('--direct_running_mode=in_memory')
-    
-  pipeline_options = beam.options.pipeline_options.PipelineOptions(pipeline_options)
-  with beam.Pipeline(options=pipeline_options) as pipeline:
+  # Start the pipeline. Force BundleBasedDirectRunner to safely avoid gRPC/FnApi in Colab.
+  # This bypasses the switching logic in standard DirectRunner that might still pick a gRPC-based runner.
+  from apache_beam.runners.direct.direct_runner import BundleBasedDirectRunner
+  pipeline_options = beam.options.pipeline_options.PipelineOptions(
+      pipeline_options)
+  with beam.Pipeline(runner=BundleBasedDirectRunner(), options=pipeline_options) as pipeline:
     examples = (
         pipeline
         | beam.Create(input_audio_paths)
