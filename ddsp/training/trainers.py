@@ -134,25 +134,20 @@ class Trainer(object):
 
   def run(self, fn, *args, **kwargs):
     """Distribute and run function on processors."""
-    # Convert any _DictWrapper objects to plain dicts to avoid TypeError
-    # with typing_extensions/TensorFlow tracing mechanism.
-    def _convert_dict_wrapper(obj):
-      if hasattr(obj, 'items') and not isinstance(obj, dict):
-        return {k: _convert_dict_wrapper(v) for k, v in obj.items()}
-      elif isinstance(obj, (list, tuple)):
-        converted = [_convert_dict_wrapper(x) for x in obj]
-        return type(obj)(converted) if isinstance(obj, tuple) else converted
-      return obj
-    
-    args = tuple(_convert_dict_wrapper(arg) for arg in args)
-    kwargs = {k: _convert_dict_wrapper(v) for k, v in kwargs.items()}
     return self.strategy.run(fn, args=args, kwargs=kwargs)
+
+  def _to_dict(self, obj):
+    """Convert _DictWrapper or similar objects to plain Python dict."""
+    if obj is None:
+      return obj
+    if hasattr(obj, 'items') and not isinstance(obj, dict):
+      return {k: self._to_dict(v) for k, v in obj.items()}
+    return obj
 
   def build(self, batch):
     """Build the model by running a distributed batch through it."""
     logging.info('Building the model...')
-    if hasattr(batch, 'items') and not isinstance(batch, dict):
-       batch = dict(batch)
+    batch = self._to_dict(batch)
     _ = self.run(tf.function(self.model.__call__), batch)
 
     self.model.summary()
@@ -164,17 +159,30 @@ class Trainer(object):
     else:
       return dataset
 
-  @tf.function
   def train_step(self, inputs):
     """Distributed training step."""
-    # Wrap iterator in tf.function, slight speedup passing in iter vs batch.
+    # Get batch from iterator (outside tf.function to avoid _DictWrapper issues)
     batch = next(inputs) if hasattr(inputs, '__next__') else inputs
-    if hasattr(batch, 'items') and not isinstance(batch, dict):
-       batch = dict(batch)
-    losses = self.run(self.step_fn, batch)
+    batch = self._to_dict(batch)
+    return self._train_step_inner(batch)
+
+  @tf.function
+  def _train_step_inner(self, batch):
+    """Inner training step wrapped in tf.function."""
+    losses = self.strategy.run(self._step_fn_inner, args=(batch,))
     # Add up the scalar losses across replicas.
     n_replicas = self.strategy.num_replicas_in_sync
     return {k: self.psum(v, axis=None) / n_replicas for k, v in losses.items()}
+
+  def _step_fn_inner(self, batch):
+    """Per-Replica training step (called by strategy.run)."""
+    with tf.GradientTape() as tape:
+      _, losses = self.model(batch, return_losses=True, training=True)
+    # Clip and apply gradients.
+    grads = tape.gradient(losses['total_loss'], self.model.trainable_variables)
+    grads, _ = tf.clip_by_global_norm(grads, self.grad_clip_norm)
+    self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables))
+    return losses
 
   @tf.function
   def step_fn(self, batch):
