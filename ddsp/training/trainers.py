@@ -134,6 +134,18 @@ class Trainer(object):
 
   def run(self, fn, *args, **kwargs):
     """Distribute and run function on processors."""
+    # Convert any _DictWrapper objects to plain dicts to avoid TypeError
+    # with typing_extensions/TensorFlow tracing mechanism.
+    def _convert_dict_wrapper(obj):
+      if hasattr(obj, 'items') and not isinstance(obj, dict):
+        return {k: _convert_dict_wrapper(v) for k, v in obj.items()}
+      elif isinstance(obj, (list, tuple)):
+        converted = [_convert_dict_wrapper(x) for x in obj]
+        return type(obj)(converted) if isinstance(obj, tuple) else converted
+      return obj
+    
+    args = tuple(_convert_dict_wrapper(arg) for arg in args)
+    kwargs = {k: _convert_dict_wrapper(v) for k, v in kwargs.items()}
     return self.strategy.run(fn, args=args, kwargs=kwargs)
 
   def build(self, batch):
