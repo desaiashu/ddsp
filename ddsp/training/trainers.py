@@ -139,9 +139,10 @@ class Trainer(object):
   def build(self, batch):
     """Build the model by running a distributed batch through it."""
     logging.info('Building the model...')
-    if type(batch).__name__ == '_DictWrapper':
-      batch = dict(batch)
+    if hasattr(batch, 'items') and not isinstance(batch, dict):
+       batch = dict(batch)
     _ = self.run(tf.function(self.model.__call__), batch)
+
     self.model.summary()
 
   def distribute_dataset(self, dataset):
@@ -156,8 +157,8 @@ class Trainer(object):
     """Distributed training step."""
     # Wrap iterator in tf.function, slight speedup passing in iter vs batch.
     batch = next(inputs) if hasattr(inputs, '__next__') else inputs
-    if type(batch).__name__ == '_DictWrapper':
-      batch = dict(batch)
+    if hasattr(batch, 'items') and not isinstance(batch, dict):
+       batch = dict(batch)
     losses = self.run(self.step_fn, batch)
     # Add up the scalar losses across replicas.
     n_replicas = self.strategy.num_replicas_in_sync
