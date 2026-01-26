@@ -51,7 +51,7 @@ setuptools.setup(
         'librosa>=0.10.0',
         'pydub<=0.25.1',
         'packaging>=24.2.0',
-        'protobuf==3.20.3',
+        'protobuf',
         'mir_eval>=0.7',
         'note_seq',
         'numpy>=1.26.0, <2.1.0',
@@ -60,12 +60,10 @@ setuptools.setup(
         'six',
         'tensorflow==2.18.0',
         'tensorflow-probability>=0.23.0',
-        'tensorflow-datasets>=4.9.2'
+        'tensorflow-datasets>=4.9.2',
+        'tflite_support>=0.1',
     ],
     extras_require={
-        'export': [
-            'tflite_support>=0.1',
-        ],
         'tfjs': [
             'tensorflowjs>=3.19',
         ],
