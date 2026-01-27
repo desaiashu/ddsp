@@ -51,10 +51,15 @@ try:
 except ImportError:
   converter = None
 
-# pylint: disable=pointless-string-statement
-
-from tflite_support import metadata as _metadata
-# pylint: enable=pointless-string-statement
+# Import only the metadata submodule to avoid binary conflicts in task/vision
+import importlib
+try:
+  _metadata = importlib.import_module('tflite_support.metadata')
+  print('Successfully imported tflite_support.metadata')
+  logging.info('Successfully imported tflite_support.metadata')
+except Exception as e:
+  print(f'Warning: Could not import tflite_support.metadata: {e}')
+  _metadata = None
 
 flags.DEFINE_string(
     'name', '', 'Name of your model to use as folder and filename on export. '
