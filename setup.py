@@ -59,10 +59,10 @@ setuptools.setup(
         'scipy>=1.10.0',
         'six',
         'tensorflow==2.18.0',
-        'tensorflowjs>=3.19',
+        'tensorflowjs==3.19',
         'tensorflow-probability>=0.23.0',
         'tensorflow-datasets>=4.9.2',
-        'tflite_support',
+        'tflite_support>=0.1',
     ],
     extras_require={
         'gcp': [
