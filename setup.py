@@ -62,7 +62,7 @@ setuptools.setup(
         'tensorflowjs==4.22.0',
         'tensorflow-probability>=0.23.0',
         'tensorflow-datasets>=4.9.2',
-        'tflite_support>=0.1',
+        'tflite-support>=0.1',
     ],
     extras_require={
         'gcp': [
