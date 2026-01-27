@@ -54,7 +54,7 @@ setuptools.setup(
         'protobuf',
         'mir_eval>=0.7',
         'note_seq',
-        'numpy>=1.26.0, <2.1.0',
+        'numpy>=1.26.0, <2.0.0',
         'requests>=2.21.0',
         'scipy>=1.10.0',
         'six',
