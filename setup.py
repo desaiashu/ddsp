@@ -50,7 +50,7 @@ setuptools.setup(
         'hmmlearn>=0.3.0',
         'librosa>=0.10.0',
         'pydub<=0.25.1',
-        'packaging>=24.2.0',
+        'packaging>=23.1.0',
         'protobuf',
         'mir_eval>=0.7',
         'note_seq',
