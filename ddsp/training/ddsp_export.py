@@ -46,10 +46,7 @@ import gin
 import librosa
 import note_seq
 import tensorflow as tf
-try:
-  from tensorflowjs.converters import converter
-except ImportError:
-  converter = None
+from tensorflowjs.converters import converter
 
 # Import only the metadata submodule to avoid binary conflicts in task/vision
 try:

@@ -59,14 +59,12 @@ setuptools.setup(
         'scipy>=1.10.0',
         'six',
         'tensorflow==2.18.0',
+        'tensorflowjs',
         'tensorflow-probability>=0.23.0',
         'tensorflow-datasets>=4.9.2',
-        'tflite_support>=0.1',
+        'tflite_support',
     ],
     extras_require={
-        'tfjs': [
-            'tensorflowjs>=3.19',
-        ],
         'gcp': [
             'gevent', 'google-api-python-client', 'google-compute-engine',
             'oauth2client'
