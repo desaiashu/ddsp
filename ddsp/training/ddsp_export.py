@@ -49,11 +49,7 @@ import tensorflow as tf
 from tensorflowjs.converters import converter
 
 # Import only the metadata submodule to avoid binary conflicts in task/vision
-try:
-  from tensorflow_lite_support.metadata.python import metadata as _metadata
-except Exception as e:
-  print(f'Warning: Could not import tflite_support.metadata: {e}')
-  _metadata = None
+from tensorflow_lite_support.metadata.python import metadata as _metadata
 
 flags.DEFINE_string(
     'name', '', 'Name of your model to use as folder and filename on export. '
@@ -237,10 +233,6 @@ def ckpt_to_saved_model(ckpt, save_dir):
 
 def saved_model_to_tfjs(input_dir, save_dir):
   """Convert SavedModel to TFJS model."""
-  if converter is None:
-    raise ImportError(
-        'tensorflowjs is not installed. Please install it with '
-        '`pip install ddsp[export]` to use TFJS conversion.')
   print(f'\nConverting to TFJS:\nInput:{input_dir}\nOutput:{save_dir}\n')
   converter.convert([
       '--input_format=tf_saved_model', '--signature_name=serving_default',
@@ -270,13 +262,9 @@ def saved_model_to_tflite(input_dir,
     f.write(tflite_model)
 
   if metadata_file is not None:
-    if _metadata is None:
-      print('Warning: tflite_support not installed, skipping metadata. '
-            'Install with: pip install ddsp[export]')
-    else:
-      populator = _metadata.MetadataPopulator.with_model_file(save_path)
-      populator.load_associated_files([metadata_file])
-      populator.populate()
+    populator = _metadata.MetadataPopulator.with_model_file(save_path)
+    populator.load_associated_files([metadata_file])
+    populator.populate()
   print('TFLite Conversion Success!')
 
 
